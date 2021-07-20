@@ -1,35 +1,28 @@
-import random
+from playables import *
 import sys
-from player import *
-from time import sleep
-from enemies import *
 
 
 class Game:
     def __init__(self):
         self.running = True
 
-
     def run(self):
         print("Welcome to RPG!\n")
         print("---------------\n")
+        hero_name = input("Please enter your name:\n")
+        hero = Player(game, hero_name)
+        edgar = Ally("Edgar", )
+        katie = Ally("Katie", )
+        yorkshire = Ally("Yorkshire", )
+        hero.allies.append(edgar)
+        hero.allies.append(katie)
+        hero.allies.append(yorkshire)
         while self.running:
-            player.action()
-            if not player.fighting:
-                player.action()
-            pass
+            hero.activity()
         else:
             sys.exit()
 
-base_exp = 30
-exponent = 1.5
-level = 1
-for i in range(20):
-    print("Level", level, ":", math.floor(base_exp * (level ** exponent)))
-    level += 1
-
-
 
 game = Game()
-player = Player(game)
+
 game.run()
