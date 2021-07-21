@@ -8,15 +8,17 @@ class Enemies:
         self.initiative = 0
         self.dead = False
         if name == "Goblin":
-            self.health = 14
-            self.max_health = 14
+            self.health = 13
+            self.max_health = 13
+            self.max_mana = 0
+            self.mana = 0
             self.atk = 10
-            self.defense = 12
+            self.defense = 10
             self.agl = 12
             self.gold = 5
-            self.exp = 6
+            self.exp = 25
             self.lvl = 1
-            self.drop_chance = 20
+            self.drop_chance = 50
             self.drop_items = ["Medicinal Herb"]
             self.actions = ['ATTACK', 'IDLE']
             self.res = {'Fire': 4, 'Shock': 3}
@@ -24,13 +26,15 @@ class Enemies:
         if name == "Wolf":
             self.max_health = 12
             self.health = 12
+            self.max_mana = 0
+            self.mana = 0
             self.atk = 14
             self.defense = 10
             self.agl = 24
             self.gold = 2
             self.exp = 4
             self.lvl = 1
-            self.drop_chance = 20
+            self.drop_chance = 50
             self.drop_items = ["Medicinal Herb"]
             self.actions = ['ATTACK', 'CRIT']
             self.res = {'Fire': 1, 'Shock': 2}

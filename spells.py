@@ -28,7 +28,7 @@ def Spell(spell, caster, target):
 
 def fireball(caster, target):
     mana_cost = 5
-    base_dmg = 6
+    base_dmg = 4
     hit_chance = 80
     caster.mana -= mana_cost
     print("{} casts Fireball!".format(caster.name))

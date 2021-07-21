@@ -85,7 +85,6 @@ def Turn(char, hero):
         else:
             print("-----")
             print("{}".format(char.name).upper())
-            print("-----")
             sleep(1.5)
             if isinstance(char, Enemies):
                 char.action(hero)

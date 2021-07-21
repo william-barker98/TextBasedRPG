@@ -6,6 +6,7 @@ from spells import *
 
 global flee_failed
 from playsound import playsound
+from skills import *
 
 
 class Player:
@@ -37,10 +38,10 @@ class Player:
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
-        katie = Ally("Katie")
-        self.allies.append(katie)
-        yorkshire = Ally("Yorkshire")
-        self.allies.append(yorkshire)
+        #katie = Ally("Katie")
+        #self.allies.append(katie)
+        #yorkshire = Ally("Yorkshire")
+        #self.allies.append(yorkshire)
         global party
         party = [self]
         for a in self.allies:
@@ -69,8 +70,9 @@ class Player:
         print("DEF: +2")
         print("AGL: +2")
         print("MAG: +2")
-
         time.sleep(2.0)
+        CheckLevelRewards(self)
+
 
     def activity(self):
         print("What do you do?")
@@ -84,12 +86,14 @@ class Player:
 
     def action(self, enemies, defeated_mobs):
         flee_failed = False
+        print("----------")
         print("HP: {}/{}".format(self.health, self.max_health))
-        for e in range(len(enemies)):
-            if len(enemies) == 1:
-                print("Enemy", e + 1, ":", enemies[e].name, "[{}/{}]".format(enemies[e].health, enemies[e].max_health), end="")
-            else:
-                print("Enemy", e + 1, ":", enemies[e].name, "[{}/{}]".format(enemies[e].health, enemies[e].max_health), ", ", end="")
+        print("----------")
+        i = 0
+        for e in enemies:
+            print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
+            i += 1
+
         print("\nWhat would you like to do?\n")
         action = input("Attack: [Z], Abilities: [X], Spells: [C], Flee: [V]\n")
         print("----------------------\n")
@@ -128,16 +132,11 @@ class Player:
     def attack(self, enemies, defeated_mobs):
         if len(enemies) > 1:
             print("Which enemy will you attack?\n")
-            for e in range(len(enemies)):
-                if e + 1 == len(enemies):
-                    print(enemies[e].name, e + 1, "[{}/{}]".format(enemies[e].health, enemies[e].max_health))
-                else:
-                    print(enemies[e].name, e + 1, "[{}/{}]".format(enemies[e].health, enemies[e].max_health), ", ", end="")
-            for e in range(len(enemies)):
-                if e + 1 == len(enemies):
-                    print("[{}]".format(e + 1))
-                else:
-                    print("[{}]".format(e + 1), ", ", end="")
+            i = 0
+            for e in enemies:
+                print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
+                i += 1
+
             choice = input()
             if choice.isdigit():
                 choice = int(choice)
@@ -183,7 +182,8 @@ class Player:
         else:
             print("Illegal Input. Try again.")
             self.spell(enemies, defeated_mobs)
-        if int(choice_spell) > len(self.spells) or int(choice_spell) <= 0:
+            return
+        if choice_spell > len(self.spells) or choice_spell <= 0:
             print("SPELL DOES NOT EXIST")
             time.sleep(1.5)
             self.spell(enemies, defeated_mobs)
@@ -317,7 +317,7 @@ class Ally(Player):
             self.max_mana = 12
             self.mana = 12
             self.exp = 0
-            self.atk = 13
+            self.atk = 15
             self.defense = 9
             self.agl = 9
             self.mag = 12
