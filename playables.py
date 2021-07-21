@@ -77,7 +77,14 @@ class Player:
 
     def activity(self):
         print("What do you do?")
-        choice = input("Fight[Z], Inventory[X], STATS[C], SHOP[V], SAVE[S], QUIT[Q]\n")
+        choice = input("""
+Fight[Z]
+Inventory[X]
+STATS[C]
+SHOP[V]
+SAVE[S]
+QUIT[Q]\n""")
+
         if choice == "z" or choice == "Z":
             Combat(self)
         if choice == "x" or choice == "X":
@@ -87,17 +94,22 @@ class Player:
 
     def action(self, enemies, defeated_mobs):
         flee_failed = False
-        print("----------")
-        print("HP: {}/{}".format(self.health, self.max_health))
-        print("----------")
+
+
+
         i = 0
         for e in enemies:
             print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
             i += 1
+            if i == len(enemies):
+                print("")
+        for p in party:
+            print("{}: HP:[{}/{}] MP[{}/{}]".format(p.name, p.health, p.max_health, p.mana, p.max_mana))
 
         print("\nWhat would you like to do?\n")
+        print("----------------------")
         action = input("Attack: [Z], Abilities: [X], Spells: [C], Flee: [V]\n")
-        print("----------------------\n")
+
 
         if action == "z" or action == "Z":
             print("[ATTACK]")
@@ -137,6 +149,11 @@ class Player:
             for e in enemies:
                 print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
                 i += 1
+                if i == len(enemies):
+                    print("")
+
+
+
 
             choice = input()
             if choice.isdigit():
@@ -162,7 +179,7 @@ class Player:
         if dmg_dealt < 1:
             dmg_dealt = 1
         print("ATK:", self.atk, ", D6:", dmg_mod, ", DEF:", target.defense)
-        print("Your attack does {} damage!".format(dmg_dealt))
+        print("{} attacks the {} for {} damage!".format(self.name, target.name, dmg_dealt))
         target.health -= dmg_dealt
         if target.health < 1:
             self.kill_enemy(target, enemies, defeated_mobs)
@@ -172,6 +189,8 @@ class Player:
         i = 0
         if 0 == len(self.spells):
             print("{} has not learned any spells.".format(self.name))
+            sleep(2.0)
+            print("------------------------------")
             self.action(enemies, defeated_mobs)
             return
         for key, value in self.spells.items():

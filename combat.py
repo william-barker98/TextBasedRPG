@@ -26,7 +26,7 @@ def Combat(hero):
 def Setup(hero):
     # Spawn Enemies
     enemy_types = ["Goblin", "Wolf"]
-    spawn_count = random.randrange(3, 4)
+    spawn_count = random.randrange(1, 4)
     spawn_names = []
     dups = {}   # Stores name duplicates
 
@@ -122,14 +122,17 @@ def Turn(char, hero):
 
             pass
         else:
-            print("-----")
-            print("{}".format(char.name).upper())
-            sleep(1.5)
+            print("----------------------")
+            print("{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health, char.mana, char.max_mana))
+            print("----------------------")
+            sleep(2.5)
             if isinstance(char, Enemies):
                 char.action(hero)
+
             else:
                 char.action(enemies, defeated_mobs)
-
+            sleep(2.0)
+            print("\n")
         Check_Outcome(hero, char, enemies)
 
 
