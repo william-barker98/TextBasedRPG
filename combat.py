@@ -12,7 +12,9 @@ def Combat(hero):
     global spawn_count
     global ended
     global turn_order
+    global spawn_count
     turn_order = []
+    spawn_result = []
     enemies = []
     defeated_mobs = []
     spawn_count = 0
@@ -24,16 +26,53 @@ def Combat(hero):
 def Setup(hero):
     # Spawn Enemies
     enemy_types = ["Goblin", "Wolf"]
-    spawn_count = random.randrange(1, 4)
-    for enemy in range(spawn_count):
+    spawn_count = random.randrange(3, 4)
+    spawn_names = []
+    dups = {}   # Stores name duplicates
+
+    for spawn in range(spawn_count):
         name = random.choice(enemy_types)
         spawn = Enemies(name)
+        spawn_names.append(spawn.name)
         enemies.append(spawn)
-    for e in range(len(enemies)):
-        print("You have encounterd a", enemies[e].name)
+        print("You have encounterd a", spawn.name)
         sleep(0.5)
 
+    for i, val in enumerate(spawn_names):
+        if val not in dups:
+            # Store index of first occurrence and occurrence value
+            dups[val] = [i, 1]
+        else:
+            # Special case for first occurrence
+            if dups[val][1] == 1:
+                spawn_names[dups[val][0]] += " " + str(dups[val][1])
+
+            # Increment occurrence value, index value doesn't matter anymore
+            dups[val][1] += 1
+
+            # Use stored occurrence value
+            spawn_names[i] += " " + str(dups[val][1])
+    print(spawn_names)
+    i = 0
+    for e in enemies:
+        e.name = spawn_names[i]
+        i += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
     Initiative(hero)
+
+
 
 
 def Initiative(hero):

@@ -7,9 +7,9 @@ class Enemies:
         self.type = type
         self.initiative = 0
         self.dead = False
-        if name == "Goblin":
-            self.health = 13
+        if "Goblin" in name:
             self.max_health = 13
+            self.health = 13
             self.max_mana = 0
             self.mana = 0
             self.atk = 10
@@ -23,7 +23,7 @@ class Enemies:
             self.actions = ['ATTACK', 'IDLE']
             self.res = {'Fire': 4, 'Shock': 3}
 
-        if name == "Wolf":
+        if "Wolf" in name:
             self.max_health = 12
             self.health = 12
             self.max_mana = 0

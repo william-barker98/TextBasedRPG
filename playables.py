@@ -3,10 +3,12 @@ import time
 import random
 from combat import Combat
 from spells import *
-
-global flee_failed
 from playsound import playsound
 from skills import *
+from sounds import PlaySound
+
+global flee_failed
+
 
 
 class Player:
@@ -26,7 +28,7 @@ class Player:
         self.res = {'Fire': 5, 'Shock': 5}
         self.level = 1
         self.level_threshold = 30
-        self.spells = {'Heal': 3}
+        self.spells = {}
         self.abilities = []
         self.equipment = []
         self.inventory = []
@@ -38,10 +40,10 @@ class Player:
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
-        #katie = Ally("Katie")
-        #self.allies.append(katie)
-        #yorkshire = Ally("Yorkshire")
-        #self.allies.append(yorkshire)
+        # katie = Ally("Katie")
+        # self.allies.append(katie)
+        # yorkshire = Ally("Yorkshire")
+        # self.allies.append(yorkshire)
         global party
         party = [self]
         for a in self.allies:
@@ -61,8 +63,8 @@ class Player:
         self.mana = self.max_mana
         self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
         print("{} HAS LEVELLED UP!".format(self.name))
-        playsound('Sounds/level_up.mp3')
-        time.sleep(0.75)
+        PlaySound('Sounds/level_up.mp3', 0.2)
+        time.sleep(3)
         print("LVL: {}".format(self.level))
         print("HP: +5")
         print("MP: +5")
@@ -72,7 +74,6 @@ class Player:
         print("MAG: +2")
         time.sleep(2.0)
         CheckLevelRewards(self)
-
 
     def activity(self):
         print("What do you do?")
@@ -195,7 +196,6 @@ class Player:
         spell_name = list(self.spells.keys())
         spell_cost = list(self.spells.values())
 
-
         spell_type = getType(spell_name[choice_spell])
         print("TYPE: ", spell_type)
 
@@ -246,7 +246,6 @@ class Player:
             if target.health <= 0:
                 self.kill_enemy(target, enemies, defeated_mobs)
 
-
     def kill_enemy(self, target, enemies, defeated_mobs):
         print("The '{}' died.".format(target.name))
         time.sleep(1.5)
@@ -254,7 +253,6 @@ class Player:
         defeated_mobs.append(target)
         enemies.remove(target)
         return
-
 
     def flee(self, enemies):
         highest_agl = 0
@@ -323,7 +321,7 @@ class Ally(Player):
             self.mag = 12
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Hasten': 10}
+            self.spells = {}
             self.abilities = []
             self.equipment = []
             self.initiative = 0
