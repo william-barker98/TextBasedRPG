@@ -7,7 +7,8 @@ class Game:
         self.running = True
 
     def run(self):
-        print("Welcome to RPG!\n")
+        print("---------------")
+        print("Welcome to JRPG")
         print("---------------\n")
         hero_name = input("Please enter your name:\n")
         hero = Player(game, hero_name)

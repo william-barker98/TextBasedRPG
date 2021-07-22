@@ -1,4 +1,7 @@
 import random
+import colorama
+from colorama import Fore
+from settings import *
 
 
 class Enemies:
@@ -7,6 +10,7 @@ class Enemies:
         self.type = type
         self.initiative = 0
         self.dead = False
+        self.colour = Fore.LIGHTRED_EX
         if "Goblin" in name:
             self.max_health = 13
             self.health = 13
@@ -74,7 +78,7 @@ class Enemies:
         if dmg_dealt < 1:
             dmg_dealt = 1
         target.health -= dmg_dealt
-        print("{} attacks {} for {} damage!".format(self.name, target.name, dmg_dealt))
+        print("{}{}{} attacks {}{}{} for {}{}{} damage!".format(self.colour, self.name, Fore.RESET, target.colour, target.name, Fore.RESET, DAMAGE_COLOUR, dmg_dealt, Fore.RESET))
         if target.health <= 0:
             if target.dead is True:
                 pass

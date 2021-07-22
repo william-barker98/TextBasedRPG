@@ -1,5 +1,8 @@
 import operator
 from time import sleep
+from settings import *
+from colorama import Fore
+
 from enemies import *
 #from player import Player
 
@@ -123,7 +126,7 @@ def Turn(char, hero):
             pass
         else:
             print("----------------------")
-            print("{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health, char.mana, char.max_mana))
+            print(char.colour + "{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health, char.mana, char.max_mana))
             print("----------------------")
             sleep(2.5)
             if isinstance(char, Enemies):
@@ -144,7 +147,6 @@ def Check_Outcome(hero, char, enemies):
 
 
 def Victory(hero):
-    sleep(1.5)
     exp_gained = 0
     gold_gained = 0
     party = []
@@ -163,7 +165,8 @@ def Victory(hero):
                 if random.randint(1, 100) <= drop_chance:
                     drop = random.choice(defeated_mobs[e].drop_items)
                     hero.inventory.append(drop)
-                    print("You received a {}!".format(drop))
+                    print("You received a {}{}{}!".format(DROP_COLOUR, drop, Fore.RESET))
+
 
     for p in party:
         if p.dead is False:
@@ -182,7 +185,7 @@ def Victory(hero):
         if p.exp >= p.level_threshold:
             p.levelUp()
 
-    print("----------------------")
+    print("----------------------\n")
     global ended
     ended = True
 

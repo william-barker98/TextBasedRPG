@@ -1,14 +1,18 @@
 import math
 import time
-import random
+from settings import *
+
+from colorama import Fore, Back
+from colorama import init
+
 from combat import Combat
-from spells import *
-from playsound import playsound
 from skills import *
 from sounds import PlaySound
+from spells import *
 
+init(autoreset=True)
 global flee_failed
-
+print(Back.BLACK)
 
 
 class Player:
@@ -30,20 +34,21 @@ class Player:
         self.level_threshold = 30
         self.spells = {}
         self.abilities = []
-        self.equipment = []
+        self.equipment = {}
         self.inventory = []
         self.allies = []
         self.initiative = 0
         self.dead = False
         self.getParty()
+        self.colour = Fore.LIGHTCYAN_EX
 
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
-        # katie = Ally("Katie")
-        # self.allies.append(katie)
-        # yorkshire = Ally("Yorkshire")
-        # self.allies.append(yorkshire)
+        katie = Ally("Katie")
+        self.allies.append(katie)
+        yorkshire = Ally("Yorkshire")
+        self.allies.append(yorkshire)
         global party
         party = [self]
         for a in self.allies:
@@ -62,7 +67,7 @@ class Player:
         self.max_mana += 5
         self.mana = self.max_mana
         self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
-        print("{} HAS LEVELLED UP!".format(self.name))
+        print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
         PlaySound('Sounds/level_up.mp3', 0.2)
         time.sleep(3)
         print("LVL: {}".format(self.level))
@@ -95,21 +100,17 @@ QUIT[Q]\n""")
     def action(self, enemies, defeated_mobs):
         flee_failed = False
 
-
-
         i = 0
         for e in enemies:
-            print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
+            print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
             i += 1
             if i == len(enemies):
                 print("")
         for p in party:
-            print("{}: HP:[{}/{}] MP[{}/{}]".format(p.name, p.health, p.max_health, p.mana, p.max_mana))
-
+            print(self.colour + "{}: HP:[{}/{}] MP[{}/{}]".format(p.name, p.health, p.max_health, p.mana, p.max_mana))
         print("\nWhat would you like to do?\n")
         print("----------------------")
         action = input("Attack: [Z], Abilities: [X], Spells: [C], Flee: [V]\n")
-
 
         if action == "z" or action == "Z":
             print("[ATTACK]")
@@ -147,13 +148,10 @@ QUIT[Q]\n""")
             print("Which enemy will you attack?\n")
             i = 0
             for e in enemies:
-                print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
+                print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana) + RESET)
                 i += 1
                 if i == len(enemies):
                     print("")
-
-
-
 
             choice = input()
             if choice.isdigit():
@@ -178,14 +176,13 @@ QUIT[Q]\n""")
         dmg_dealt = self.atk + dmg_mod - target.defense
         if dmg_dealt < 1:
             dmg_dealt = 1
-        print("ATK:", self.atk, ", D6:", dmg_mod, ", DEF:", target.defense)
-        print("{} attacks the {} for {} damage!".format(self.name, target.name, dmg_dealt))
+        print("{}{}{} attacks the {}{}{} for {}{}{} damage!".format(self.colour, self.name, RESET, target.colour, target.name, RESET, DAMAGE_COLOUR, dmg_dealt, RESET))
         target.health -= dmg_dealt
         if target.health < 1:
             self.kill_enemy(target, enemies, defeated_mobs)
 
     def spell(self, enemies, defeated_mobs):
-        print("[MAGIC]")
+        print("[SPELLS]")
         i = 0
         if 0 == len(self.spells):
             print("{} has not learned any spells.".format(self.name))
@@ -194,8 +191,9 @@ QUIT[Q]\n""")
             self.action(enemies, defeated_mobs)
             return
         for key, value in self.spells.items():
-            print("[{}]: {}:{}".format(i + 1, key, value))
+            print("{}[{}]: {}: {}".format(SPELL_COLOUR_OFF, i + 1, key, value) + RESET)
             i += 1
+        print("")
         choice_spell = input("Cast a spell ([B] to back).")
         if choice_spell.isdigit():
             choice_spell = int(choice_spell)
@@ -221,15 +219,8 @@ QUIT[Q]\n""")
         # If spell is offensive:
         if spell_type:
             for e in range(len(enemies)):
-                if e + 1 == len(enemies):
-                    print(enemies[e].name, e + 1, "[{}/{}]".format(enemies[e].health, enemies[e].max_health))
-                else:
-                    print(enemies[e].name, e + 1, "[{}/{}]".format(enemies[e].health, enemies[e].max_health), ", ", end="")
-            for e in range(len(enemies)):
-                if e + 1 == len(enemies):
-                    print("[{}]".format(e + 1))
-                else:
-                    print("[{}]".format(e + 1), ", ", end="")
+                print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name, enemies[e].health, enemies[e].max_health, enemies[e].mana, enemies[e].max_mana) + RESET)
+
             choice = input()
             if choice.isdigit():
                 choice = int(choice)
@@ -248,7 +239,7 @@ QUIT[Q]\n""")
         elif not spell_type:
             i = 0
             for p in party:
-                print("[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana, p.max_mana))
+                print(self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana, p.max_mana))
                 i += 1
 
             choice = input("Cast a spell ([B] to back).")
@@ -266,7 +257,7 @@ QUIT[Q]\n""")
                 self.kill_enemy(target, enemies, defeated_mobs)
 
     def kill_enemy(self, target, enemies, defeated_mobs):
-        print("The '{}' died.".format(target.name))
+        print("'{}{}{}' died.".format(target.colour, target.name, RESET))
         time.sleep(1.5)
         target.dead = True
         defeated_mobs.append(target)
@@ -328,6 +319,7 @@ class Ally(Player):
     def __init__(self, name):
         self.name = name
         self.dead = False
+        self.colour = Fore.LIGHTCYAN_EX
         if name == "Edgar":
             self.max_health = 28
             self.health = 28
@@ -353,11 +345,11 @@ class Ally(Player):
             self.exp = 0
             self.atk = 11
             self.defense = 11
-            self.agl = 16
+            self.agl = 25
             self.mag = 16
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Fireball': 5}
+            self.spells = {'Fireball': getCost('Fireball'), 'Heal': getCost('Heal')}
             self.abilities = []
             self.equipment = []
             self.initiative = 0
