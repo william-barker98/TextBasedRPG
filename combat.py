@@ -2,10 +2,11 @@ import operator
 from time import sleep
 from settings import *
 from colorama import Fore
-
+from modifiers import *
 from enemies import *
-#from player import Player
 
+
+# from player import Player
 
 
 def Combat(hero):
@@ -31,7 +32,7 @@ def Setup(hero):
     enemy_types = ["Goblin", "Wolf"]
     spawn_count = random.randrange(1, 4)
     spawn_names = []
-    dups = {}   # Stores name duplicates
+    dups = {}  # Stores name duplicates
 
     for spawn in range(spawn_count):
         name = random.choice(enemy_types)
@@ -61,21 +62,7 @@ def Setup(hero):
         e.name = spawn_names[i]
         i += 1
 
-
-
-
-
-
-
-
-
-
-
-
-
     Initiative(hero)
-
-
 
 
 def Initiative(hero):
@@ -125,8 +112,11 @@ def Turn(char, hero):
 
             pass
         else:
+
+            CheckModifiers(char)
             print("----------------------")
-            print(char.colour + "{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health, char.mana, char.max_mana))
+            print(char.colour + "{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health,
+                                                                   char.mana, char.max_mana))
             print("----------------------")
             sleep(2.5)
             if isinstance(char, Enemies):
@@ -167,7 +157,6 @@ def Victory(hero):
                     hero.inventory.append(drop)
                     print("You received a {}{}{}!".format(DROP_COLOUR, drop, Fore.RESET))
 
-
     for p in party:
         if p.dead is False:
             p.exp += exp_gained
@@ -188,4 +177,3 @@ def Victory(hero):
     print("----------------------\n")
     global ended
     ended = True
-

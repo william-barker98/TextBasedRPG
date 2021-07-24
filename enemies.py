@@ -11,6 +11,8 @@ class Enemies:
         self.initiative = 0
         self.dead = False
         self.colour = Fore.LIGHTRED_EX
+        self.buffs = {}
+        self.debuffs = {}
         if "Goblin" in name:
             self.max_health = 13
             self.health = 13

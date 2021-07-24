@@ -13,6 +13,7 @@ from spells import *
 init(autoreset=True)
 global flee_failed
 print(Back.BLACK)
+print("Test")
 
 
 class Player:
@@ -32,7 +33,7 @@ class Player:
         self.res = {'Fire': 5, 'Shock': 5}
         self.level = 1
         self.level_threshold = 30
-        self.spells = {}
+        self.spells = {'Haste': getDuration('Haste')}
         self.abilities = []
         self.equipment = {}
         self.inventory = []
@@ -41,14 +42,16 @@ class Player:
         self.dead = False
         self.getParty()
         self.colour = Fore.LIGHTCYAN_EX
+        self.buffs = {}
+        self.debuffs = {}
 
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
-        katie = Ally("Katie")
-        self.allies.append(katie)
-        yorkshire = Ally("Yorkshire")
-        self.allies.append(yorkshire)
+        # katie = Ally("Katie")
+        # self.allies.append(katie)
+        # yorkshire = Ally("Yorkshire")
+        # self.allies.append(yorkshire)
         global party
         party = [self]
         for a in self.allies:
@@ -102,7 +105,8 @@ QUIT[Q]\n""")
 
         i = 0
         for e in enemies:
-            print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana))
+            print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health,
+                                                                             e.mana, e.max_mana))
             i += 1
             if i == len(enemies):
                 print("")
@@ -148,7 +152,8 @@ QUIT[Q]\n""")
             print("Which enemy will you attack?\n")
             i = 0
             for e in enemies:
-                print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health, e.mana, e.max_mana) + RESET)
+                print(Fore.LIGHTRED_EX + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, e.name, e.health, e.max_health,
+                                                                                 e.mana, e.max_mana) + RESET)
                 i += 1
                 if i == len(enemies):
                     print("")
@@ -176,7 +181,9 @@ QUIT[Q]\n""")
         dmg_dealt = self.atk + dmg_mod - target.defense
         if dmg_dealt < 1:
             dmg_dealt = 1
-        print("{}{}{} attacks the {}{}{} for {}{}{} damage!".format(self.colour, self.name, RESET, target.colour, target.name, RESET, DAMAGE_COLOUR, dmg_dealt, RESET))
+        print("{}{}{} attacks the {}{}{} for {}{}{} damage!".format(self.colour, self.name, RESET, target.colour,
+                                                                    target.name, RESET, DAMAGE_COLOUR, dmg_dealt,
+                                                                    RESET))
         target.health -= dmg_dealt
         if target.health < 1:
             self.kill_enemy(target, enemies, defeated_mobs)
@@ -211,7 +218,7 @@ QUIT[Q]\n""")
 
         # Determine whether it targets allies or enemies.
         spell_name = list(self.spells.keys())
-        spell_cost = list(self.spells.values())
+        spell_info = list(self.spells.values())
 
         spell_type = getType(spell_name[choice_spell])
         print("TYPE: ", spell_type)
@@ -219,7 +226,9 @@ QUIT[Q]\n""")
         # If spell is offensive:
         if spell_type:
             for e in range(len(enemies)):
-                print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name, enemies[e].health, enemies[e].max_health, enemies[e].mana, enemies[e].max_mana) + RESET)
+                print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name,
+                                                               enemies[e].health, enemies[e].max_health,
+                                                               enemies[e].mana, enemies[e].max_mana) + RESET)
 
             choice = input()
             if choice.isdigit():
@@ -239,7 +248,9 @@ QUIT[Q]\n""")
         elif not spell_type:
             i = 0
             for p in party:
-                print(self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana, p.max_mana))
+                print(
+                    self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana,
+                                                                          p.max_mana))
                 i += 1
 
             choice = input("Cast a spell ([B] to back).")
@@ -247,7 +258,7 @@ QUIT[Q]\n""")
                 choice = int(choice)
             choice -= 1
             target = party[choice]
-        if spell_cost[choice_spell] > self.mana:
+        if getCost(spell_name[choice_spell]) > self.mana:
             print("Not enough mana.")
             self.spell(enemies, defeated_mobs)
             return
@@ -320,6 +331,9 @@ class Ally(Player):
         self.name = name
         self.dead = False
         self.colour = Fore.LIGHTCYAN_EX
+        self.buffs = {}
+        self.debuffs = {}
+        self.res = {'Fire': 5, 'Shock': 5}
         if name == "Edgar":
             self.max_health = 28
             self.health = 28
@@ -332,7 +346,7 @@ class Ally(Player):
             self.mag = 12
             self.level = 1
             self.level_threshold = 30
-            self.spells = {}
+            self.spells = {'Haste': getDuration('Haste')}
             self.abilities = []
             self.equipment = []
             self.initiative = 0
@@ -349,7 +363,8 @@ class Ally(Player):
             self.mag = 16
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Fireball': getCost('Fireball'), 'Heal': getCost('Heal')}
+            self.spells = {'Fireball': getDuration('Fireball'),
+                           'Heal': getDuration('Heal')}
             self.abilities = []
             self.equipment = []
             self.initiative = 0
@@ -366,7 +381,13 @@ class Ally(Player):
             self.mag = 5
             self.level = 1
             self.level_threshold = 30
-            self.spells = []
+            self.spells = {'Haste': getDuration('Haste')}
             self.abilities = []
             self.equipment = []
-            self.initiative = 0
+
+        self.base_atk = self.atk
+        self.base_def = self.defense
+        self.base_agl = self.agl
+        self.base_mag = self.mag
+        self.base_res = self.res
+        self.initiative = 0
