@@ -22,7 +22,7 @@ class Enemies:
             self.defense = 10
             self.agl = 12
             self.gold = 5
-            self.exp = 25
+            self.exp = 5
             self.lvl = 1
             self.drop_chance = 50
             self.drop_items = ["Medicinal Herb"]
@@ -35,10 +35,10 @@ class Enemies:
             self.max_mana = 0
             self.mana = 0
             self.atk = 14
-            self.defense = 10
+            self.defense = 8
             self.agl = 24
             self.gold = 2
-            self.exp = 4000
+            self.exp = 5
             self.lvl = 1
             self.drop_chance = 50
             self.drop_items = ["Medicinal Herb"]

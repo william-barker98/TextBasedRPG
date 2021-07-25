@@ -44,6 +44,8 @@ class Player:
         self.colour = Fore.LIGHTCYAN_EX
         self.buffs = {}
         self.debuffs = {}
+        self.skill_points = 0
+        self.skills = {'Swords': 0, 'Spears': 0, 'Shields': 0}
 
     def getParty(self):
         edgar = Ally("Edgar")
@@ -69,6 +71,7 @@ class Player:
         self.mag += 2
         self.max_mana += 5
         self.mana = self.max_mana
+        self.skill_points += 5
         self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
         print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
         PlaySound('Sounds/level_up.mp3', 0.2)
@@ -81,7 +84,21 @@ class Player:
         print("AGL: +2")
         print("MAG: +2")
         time.sleep(2.0)
+
         CheckLevelRewards(self)
+        print("{}{}{} has gained {}{}{} skill points!".format(self.colour, self.name, RESET, DAMAGE_COLOUR, "5", RESET))
+        sleep(1.0)
+        allocate = input("Allocate points now?: [Y]/[N]")
+
+        while allocate is not "Y" or allocate is not "N":
+            print("WRONG INPUT. TRY AGAIN")
+
+        if allocate == "Y":
+            AllocateSkillPoints(self, self.skill_points + 5)
+        elif allocate == "N":
+            pass
+
+
 
     def activity(self):
         print(self.buffs.items(), "\n")
@@ -409,6 +426,7 @@ class Ally(Player):
         self.buffs = {}
         self.debuffs = {}
         self.res = {'Fire': 5, 'Shock': 5}
+        self.skill_points = 0
         if name == "Edgar":
             self.max_health = 28
             self.health = 28

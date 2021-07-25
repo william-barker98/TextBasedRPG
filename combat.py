@@ -29,7 +29,7 @@ def Combat(hero):
 
 def Setup(hero):
     # Spawn Enemies
-    enemy_types = ["Goblin", "Wolf"]
+    enemy_types = ["Wolf"]
     spawn_count = random.randrange(1, 2)
     spawn_names = []
     dups = {}  # Stores name duplicates
@@ -177,9 +177,15 @@ def Victory(hero):
     print("GOLD: +{} ".format(gold_gained))
     sleep(1.5)
 
+    # Used to manage levelling up multiple times.
+
     for p in party:
-        if p.exp >= p.level_threshold:
-            p.levelUp()
+        levelling = True
+        while levelling:
+            if p.exp >= p.level_threshold:
+                p.levelUp()
+            else:
+                levelling = False
 
     print("----------------------\n")
     global ended

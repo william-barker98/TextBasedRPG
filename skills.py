@@ -14,3 +14,10 @@ def CheckLevelRewards(p):  # party member
             print("---> {} learned Haste! <---".format(p.name))
             sleep(1.5)
     return
+
+def AllocateSkillPoints(char, points):
+    skills = char.skills.keys()
+    values = char.skills.values()
+
+
+    pass
