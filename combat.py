@@ -30,7 +30,7 @@ def Combat(hero):
 def Setup(hero):
     # Spawn Enemies
     enemy_types = ["Goblin", "Wolf"]
-    spawn_count = random.randrange(1, 4)
+    spawn_count = random.randrange(1, 2)
     spawn_names = []
     dups = {}  # Stores name duplicates
 
@@ -146,6 +146,13 @@ def Victory(hero):
 
     drops = []
     for p in party:
+        for b in p.buffs.copy():
+            RemoveModifiers(b, p)
+
+        for d in p.debuffs.copy():
+            RemoveModifiers(d, p)
+
+
         if p == hero:
             for e in range(len(defeated_mobs)):
                 hero.gold += defeated_mobs[e].gold

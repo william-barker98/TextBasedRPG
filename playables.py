@@ -9,11 +9,11 @@ from combat import Combat
 from skills import *
 from sounds import PlaySound
 from spells import *
+from abilities import *
 
 init(autoreset=True)
 global flee_failed
 print(Back.BLACK)
-print("Test")
 
 
 class Player:
@@ -33,7 +33,7 @@ class Player:
         self.res = {'Fire': 5, 'Shock': 5}
         self.level = 1
         self.level_threshold = 30
-        self.spells = {'Haste': getDuration('Haste')}
+        self.spells = ['Haste']
         self.abilities = []
         self.equipment = {}
         self.inventory = []
@@ -84,6 +84,7 @@ class Player:
         CheckLevelRewards(self)
 
     def activity(self):
+        print(self.buffs.items(), "\n")
         print("What do you do?")
         choice = input("""
 Fight[Z]
@@ -121,9 +122,8 @@ QUIT[Q]\n""")
             self.attack(enemies, defeated_mobs)
 
         elif action == "x" or action == "X":
-            print("[ABILITIES]")
+            self.ability(enemies, defeated_mobs)
             pass
-
 
         elif action == "c" or action == "C":
             self.spell(enemies, defeated_mobs)
@@ -188,6 +188,85 @@ QUIT[Q]\n""")
         if target.health < 1:
             self.kill_enemy(target, enemies, defeated_mobs)
 
+    def ability(self, enemies, defeated_mobs):
+        print("[ABILITIES]")
+        i = 0
+        if 0 == len(self.abilities):
+            print("{}{}{} has not learned any {}abilities{}."
+                  .format(self.colour, self.name, RESET, ABILITIES_COLOUR, RESET))
+            sleep(2.0)
+            print("------------------------------")
+            self.action(enemies, defeated_mobs)
+            return
+        for ability in self.abilities:
+            print("{}[{}]: {}: {}".format(ABILITIES_COLOUR, i + 1, ability, a_getCost(ability)) + RESET)
+            i += 1
+        print("")
+        choice_ability = input("Cast a spell ([B] to back).")
+
+        if choice_ability.isdigit():
+            choice_ability = int(choice_ability)
+        else:
+            print("Illegal Input. Try again.")
+            self.ability(enemies, defeated_mobs)
+            return
+        if choice_ability > len(self.abilities) or choice_ability <= 0:
+            print("ABILITY DOES NOT EXIST")
+            time.sleep(1.5)
+            self.ability(enemies, defeated_mobs)
+            return
+            # -1 so choice_spell can be used as an index.
+        choice_ability -= 1
+
+        ability_type = a_getType(self.abilities[choice_ability])
+        print("TYPE: ", ability_type)
+
+        # If ability is offensive (targets enemies):
+        if ability_type:
+            for e in range(len(enemies)):
+                print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name,
+                                                               enemies[e].health, enemies[e].max_health,
+                                                               enemies[e].mana, enemies[e].max_mana) + RESET)
+
+            choice = input()
+            if choice.isdigit():
+                choice = int(choice)
+            else:
+                print("Illegal Input. Try again.")
+                self.ability(enemies, defeated_mobs)
+            if choice > len(enemies) or choice <= 0:
+                print("ENEMY DOES NOT EXIST")
+                time.sleep(1.5)
+                self.ability(enemies, defeated_mobs)
+                return
+            choice -= 1
+            target = enemies[choice]
+
+        # If spell is friendly (targets allies):
+        elif not ability_type:
+            i = 0
+            for p in party:
+                print(
+                    self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana,
+                                                                          p.max_mana))
+                i += 1
+
+            choice = input("Cast a spell ([B] to back).")
+            if choice.isdigit():
+                choice = int(choice)
+            choice -= 1
+            target = party[choice]
+        if a_getCost(self.abilities[choice_ability]) > self.mana:
+            print("Not enough mana.")
+            self.ability(enemies, defeated_mobs)
+            return
+        Ability(self.abilities[choice_ability], self, target)
+        if ability_type is True:
+            if target.health <= 0:
+                self.kill_enemy(target, enemies, defeated_mobs)
+
+
+
     def spell(self, enemies, defeated_mobs):
         print("[SPELLS]")
         i = 0
@@ -197,8 +276,8 @@ QUIT[Q]\n""")
             print("------------------------------")
             self.action(enemies, defeated_mobs)
             return
-        for key, value in self.spells.items():
-            print("{}[{}]: {}: {}".format(SPELL_COLOUR_OFF, i + 1, key, value) + RESET)
+        for spell in self.spells:
+            print("{}[{}]: {}: {}".format(SPELL_COLOUR, i + 1, spell, s_getCost(spell)) + RESET)
             i += 1
         print("")
         choice_spell = input("Cast a spell ([B] to back).")
@@ -216,11 +295,7 @@ QUIT[Q]\n""")
         # -1 so choice_spell can be used as an index.
         choice_spell -= 1
 
-        # Determine whether it targets allies or enemies.
-        spell_name = list(self.spells.keys())
-        spell_info = list(self.spells.values())
-
-        spell_type = getType(spell_name[choice_spell])
+        spell_type = s_getType(self.spells[choice_spell])
         print("TYPE: ", spell_type)
 
         # If spell is offensive:
@@ -258,11 +333,11 @@ QUIT[Q]\n""")
                 choice = int(choice)
             choice -= 1
             target = party[choice]
-        if getCost(spell_name[choice_spell]) > self.mana:
+        if s_getCost(self.spells[choice_spell]) > self.mana:
             print("Not enough mana.")
             self.spell(enemies, defeated_mobs)
             return
-        Spell(spell_name[choice_spell], self, target)
+        Spell(self.spells[choice_spell], self, target)
         if spell_type is True:
             if target.health <= 0:
                 self.kill_enemy(target, enemies, defeated_mobs)
@@ -346,8 +421,8 @@ class Ally(Player):
             self.mag = 12
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Haste': getDuration('Haste')}
-            self.abilities = []
+            self.spells = []
+            self.abilities = ['Rend']
             self.equipment = []
             self.initiative = 0
 
@@ -363,8 +438,7 @@ class Ally(Player):
             self.mag = 16
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Fireball': getDuration('Fireball'),
-                           'Heal': getDuration('Heal')}
+            self.spells = ['Fireball', 'Heal']
             self.abilities = []
             self.equipment = []
             self.initiative = 0
@@ -381,7 +455,7 @@ class Ally(Player):
             self.mag = 5
             self.level = 1
             self.level_threshold = 30
-            self.spells = {'Haste': getDuration('Haste')}
+            self.spells = ['Haste']
             self.abilities = []
             self.equipment = []
 

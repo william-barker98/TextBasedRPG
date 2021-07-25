@@ -4,7 +4,7 @@ from settings import *
 from colorama import Fore
 
 
-def getCost(spell):
+def s_getCost(spell):
     if spell == "Fireball":
         return 5
     if spell == "Heal":
@@ -14,11 +14,11 @@ def getCost(spell):
 
 
 # Returns the value of a spell (dmg, heal, buff, debuff etc).
-def getValue():
+def s_getValue():
     pass
 
 
-def getType(spell):
+def s_getType(spell):
     if spell == "Fireball":
         return True
     if spell == "Heal":
@@ -27,9 +27,9 @@ def getType(spell):
         return False
 
 
-def getDuration(spell):
+def s_getDuration(spell):
     if spell == 'Haste':
-        return 2
+        return 3
     else:
         return False
 
@@ -45,11 +45,10 @@ def Spell(spell, caster, target):
 
 
 def fireball(caster, target):
-    mana_cost = 5
     base_dmg = 4
     hit_chance = 80
-    caster.mana -= mana_cost
-    print("{} casts {}Fireball{}!".format(caster.name, SPELL_COLOUR_OFF, RESET))
+    caster.mana -= s_getCost('Fireball')
+    print("{} casts {}Fireball{}!".format(caster.name, SPELL_COLOUR, RESET))
     sleep(1.5)
     if random.randint(1, 100) <= hit_chance:
         dmg_mod = base_dmg + random.randint(1, 6) * 2 - target.res['Fire'] + caster.mag // 2
@@ -64,7 +63,7 @@ def fireball(caster, target):
 
 def heal(caster, target):
     heal_amount = 30
-    print("{}{}{} casts {}Heal{} on {}{}{}!".format(caster.colour, caster.name, RESET, SPELL_COLOUR_DEF, RESET,
+    print("{}{}{} casts {}Heal{} on {}{}{}!".format(caster.colour, caster.name, RESET, SPELL_COLOUR_HEAL, RESET,
                                                     target.colour, target.name, RESET))
     sleep(1.5)
     diff = target.max_health - target.health
@@ -80,5 +79,7 @@ def heal(caster, target):
 
 
 def haste(caster, target):
-    target.buffs['Haste'] = getDuration('Haste')
+    print("{}{}{} casts {}Haste{} on {}{}{}".format(caster.colour,caster.name, RESET, SPELL_COLOUR, RESET, target.colour, target.name, RESET))
+    target.buffs['Haste'] = s_getDuration('Haste')
+    print("{}{}'s{} agility increased!".format(target.colour, target.name, RESET))
     target.agl += 5
