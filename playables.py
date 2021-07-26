@@ -47,6 +47,7 @@ class Player:
         self.skill_points = 0
         self.skills = {'Swords': 0, 'Spears': 0, 'Shields': 0}
 
+
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
@@ -90,15 +91,14 @@ class Player:
         sleep(1.0)
         allocate = input("Allocate points now?: [Y]/[N]")
 
-        while allocate is not "Y" or allocate is not "N":
-            print("WRONG INPUT. TRY AGAIN")
+        while allocate != "y" and allocate != "n":
+            print("INPUT A VALUE")
+            allocate = input("Allocate points now?: [Y]/[N]")
 
-        if allocate == "Y":
+        if allocate == "y" or allocate == "Y":
             AllocateSkillPoints(self, self.skill_points + 5)
-        elif allocate == "N":
+        elif allocate == "n" or allocate == "N":
             pass
-
-
 
     def activity(self):
         print(self.buffs.items(), "\n")
@@ -114,6 +114,7 @@ QUIT[Q]\n""")
         if choice == "z" or choice == "Z":
             Combat(self)
         if choice == "x" or choice == "X":
+            self.show_inventory()
             self.show_inventory()
         if choice == "c" or choice == "C":
             self.show_team()

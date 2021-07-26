@@ -20,6 +20,11 @@ def a_getDuration(ability):
     pass
 
 
+def a_getWeapon(ability):
+    if ability == "Rend":
+        return "Axe"
+
+
 def Ability(ability, caster, target):
     if ability == "Rend":
         Rend(caster, target)
@@ -28,7 +33,7 @@ def Ability(ability, caster, target):
 
 def Rend(caster, target):
     caster.mana -= a_getCost('Rend')
-    rend_chance = 60
+    rend_chance = 65
     print("{}{}{} attacks {}{}{} with  {}Rend{} !"
           .format(caster.colour, caster.name, RESET, target.colour, target.name, RESET, ABILITIES_COLOUR, RESET))
     sleep(1.5)
@@ -39,8 +44,10 @@ def Rend(caster, target):
         "Hit! {}{}{} dealt {}{}{} to {}{}".format(caster.colour, caster.name, RESET, DAMAGE_COLOUR, dmg_mod, RESET,
                                                   target.colour, target.name) + RESET)
 
-    target.debuffs['Rend'] = a_getDuration('Rend')
-    print("{}{}'s{} defense decreased!".format(target.colour, target.name, RESET))
-    print("Target Defense OLD: {}".format(target.defense))
-    target.defense *= 0.5
-    print("Target Defense NEW: {}".format(target.defense))
+    rended = random.randint(1, 101)
+    if rended <= rend_chance:
+        target.debuffs['Rend'] = a_getDuration('Rend')
+        print("{}{}'s{} defense decreased!".format(target.colour, target.name, RESET))
+        print("Target Defense OLD: {}".format(target.defense))
+        target.defense - target.defense // 2
+        print("Target Defense NEW: {}".format(target.defense))

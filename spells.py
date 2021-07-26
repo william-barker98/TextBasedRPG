@@ -50,7 +50,7 @@ def fireball(caster, target):
     caster.mana -= s_getCost('Fireball')
     print("{} casts {}Fireball{}!".format(caster.name, SPELL_COLOUR, RESET))
     sleep(1.5)
-    if random.randint(1, 100) <= hit_chance:
+    if random.randint(1, 101) <= hit_chance:
         dmg_mod = base_dmg + random.randint(1, 6) * 2 - target.res['Fire'] + caster.mag // 2
         target.health -= dmg_mod
         print(

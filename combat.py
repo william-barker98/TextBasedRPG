@@ -159,7 +159,7 @@ def Victory(hero):
                 gold_gained += defeated_mobs[e].gold
                 exp_gained += defeated_mobs[e].exp
                 drop_chance = defeated_mobs[e].drop_chance
-                if random.randint(1, 100) <= drop_chance:
+                if random.randint(1, 101) <= drop_chance:
                     drop = random.choice(defeated_mobs[e].drop_items)
                     hero.inventory.append(drop)
                     print("You received a {}{}{}!".format(DROP_COLOUR, drop, Fore.RESET))

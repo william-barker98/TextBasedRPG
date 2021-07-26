@@ -38,7 +38,7 @@ class Enemies:
             self.defense = 8
             self.agl = 24
             self.gold = 2
-            self.exp = 5
+            self.exp = 40
             self.lvl = 1
             self.drop_chance = 50
             self.drop_items = ["Medicinal Herb"]
