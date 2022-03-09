@@ -49,5 +49,5 @@ def Rend(caster, target):
         target.debuffs['Rend'] = a_getDuration('Rend')
         print("{}{}'s{} defense decreased!".format(target.colour, target.name, RESET))
         print("Target Defense OLD: {}".format(target.defense))
-        target.defense - target.defense // 2
+        target.defense -= target.defense // 2
         print("Target Defense NEW: {}".format(target.defense))

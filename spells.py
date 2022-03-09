@@ -20,7 +20,7 @@ def s_getValue():
 
 def s_getType(spell):
     if spell == "Fireball":
-        return True
+        return "FIRE"
     if spell == "Heal":
         return False
     if spell == "Haste":

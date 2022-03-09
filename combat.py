@@ -29,8 +29,8 @@ def Combat(hero):
 
 def Setup(hero):
     # Spawn Enemies
-    enemy_types = ["Wolf"]
-    spawn_count = random.randrange(1, 2)
+    enemy_types = ["Wolf", "Goblin"]
+    spawn_count = random.randrange(1, 4)
     spawn_names = []
     dups = {}  # Stores name duplicates
 

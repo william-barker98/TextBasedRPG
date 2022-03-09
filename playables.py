@@ -51,10 +51,10 @@ class Player:
     def getParty(self):
         edgar = Ally("Edgar")
         self.allies.append(edgar)
-        # katie = Ally("Katie")
-        # self.allies.append(katie)
-        # yorkshire = Ally("Yorkshire")
-        # self.allies.append(yorkshire)
+        katie = Ally("Katie")
+        self.allies.append(katie)
+        yorkshire = Ally("Yorkshire")
+        self.allies.append(yorkshire)
         global party
         party = [self]
         for a in self.allies:
@@ -131,7 +131,7 @@ QUIT[Q]\n""")
                 print("")
         for p in party:
             print(self.colour + "{}: HP:[{}/{}] MP[{}/{}]".format(p.name, p.health, p.max_health, p.mana, p.max_mana))
-        print("\nWhat would you like to do?\n")
+        print("\n{}, What would you like to do?\n".format(self.name))
         print("----------------------")
         action = input("Attack: [Z], Abilities: [X], Spells: [C], Flee: [V]\n")
 
@@ -315,6 +315,7 @@ QUIT[Q]\n""")
 
         spell_type = s_getType(self.spells[choice_spell])
         print("TYPE: ", spell_type)
+        type = s_getType(spell)
 
         # If spell is offensive:
         if spell_type:
@@ -337,6 +338,7 @@ QUIT[Q]\n""")
             choice -= 1
             target = enemies[choice]
 
+
         # If spell is friendly:
         elif not spell_type:
             i = 0
@@ -356,9 +358,9 @@ QUIT[Q]\n""")
             self.spell(enemies, defeated_mobs)
             return
         Spell(self.spells[choice_spell], self, target)
-        if spell_type is True:
-            if target.health <= 0:
-                self.kill_enemy(target, enemies, defeated_mobs)
+        if target.health < 1 and spell_type:
+            self.kill_enemy(target, enemies, defeated_mobs)
+
 
     def kill_enemy(self, target, enemies, defeated_mobs):
         print("'{}{}{}' died.".format(target.colour, target.name, RESET))
@@ -428,6 +430,7 @@ class Ally(Player):
         self.debuffs = {}
         self.res = {'Fire': 5, 'Shock': 5}
         self.skill_points = 0
+
         if name == "Edgar":
             self.max_health = 28
             self.health = 28
