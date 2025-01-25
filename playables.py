@@ -28,12 +28,12 @@ class Player:
         self.gold = 0
         self.atk = 13
         self.defense = 13
-        self.agl = 25
+        self.agl = 15
         self.mag = 10
         self.res = {'Fire': 5, 'Shock': 5}
         self.level = 1
         self.level_threshold = 30
-        self.spells = ['Haste']
+        self.spells = ['Haste', 'Heal']
         self.abilities = []
         self.equipment = {}
         self.inventory = []
@@ -46,7 +46,6 @@ class Player:
         self.debuffs = {}
         self.skill_points = 0
         self.skills = {'Swords': 0, 'Spears': 0, 'Shields': 0}
-
 
     def getParty(self):
         edgar = Ally("Edgar")
@@ -64,27 +63,96 @@ class Player:
         self.base_exp = 30
         self.exponent = 1.5
         self.level += 1
-        self.max_health += 5
-        self.health = self.max_health
-        self.atk += 2
-        self.defense += 2
-        self.agl += 2
-        self.mag += 2
-        self.max_mana += 5
-        self.mana = self.max_mana
-        self.skill_points += 5
-        self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
-        print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
-        PlaySound('Sounds/level_up.mp3', 0.2)
-        time.sleep(3)
-        print("LVL: {}".format(self.level))
-        print("HP: +5")
-        print("MP: +5")
-        print("ATK: +2")
-        print("DEF: +2")
-        print("AGL: +2")
-        print("MAG: +2")
-        time.sleep(2.0)
+
+        if self.__class__.__name__ == "Player":
+            self.max_health += 2
+            self.health = self.max_health
+            self.atk += 2
+            self.defense += 2
+            self.agl += 2
+            self.mag += 2
+            self.max_mana += 5
+            self.mana = self.max_mana
+            self.skill_points += 5
+            self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
+            print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
+            PlaySound('Sounds/level_up.mp3', 0.2)
+            time.sleep(2)
+            print("LVL: {}".format(self.level))
+            print("HP: +5")
+            print("MP: +5")
+            print("ATK: +2")
+            print("DEF: +2")
+            print("AGL: +2")
+            print("MAG: +2")
+            time.sleep(1.0)
+
+        if self.name == "Edgar":
+            self.max_health += 2
+            self.health = self.max_health
+            self.atk += 2
+            self.defense += 2
+            self.agl += 2
+            self.mag += 2
+            self.max_mana += 5
+            self.mana = self.max_mana
+            self.skill_points += 5
+            self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
+            print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
+            PlaySound('Sounds/level_up.mp3', 0.2)
+            time.sleep(3)
+            print("LVL: {}".format(self.level))
+            print("HP: +5")
+            print("MP: +5")
+            print("ATK: +2")
+            print("DEF: +2")
+            print("AGL: +2")
+            print("MAG: +2")
+            time.sleep(2.0)
+        if self.name == "Yorkshire":
+            self.max_health += 10
+            self.health = self.max_health
+            self.atk += 2
+            self.defense += 2
+            self.agl += 2
+            self.mag += 2
+            self.max_mana += 5
+            self.mana = self.max_mana
+            self.skill_points += 5
+            self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
+            print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
+            PlaySound('Sounds/level_up.mp3', 0.2)
+            time.sleep(3)
+            print("LVL: {}".format(self.level))
+            print("HP: +5")
+            print("MP: +5")
+            print("ATK: +2")
+            print("DEF: +2")
+            print("AGL: +2")
+            print("MAG: +2")
+            time.sleep(2.0)
+        if self.name == "Katie":
+            self.max_health += 1
+            self.health = self.max_health
+            self.atk += 2
+            self.defense += 2
+            self.agl += 2
+            self.mag += 2
+            self.max_mana += 5
+            self.mana = self.max_mana
+            self.skill_points += 5
+            self.level_threshold = math.floor(self.base_exp * (self.level ** self.exponent))
+            print("{}{}{} HAS LEVELLED UP!".format(self.colour, self.name, RESET))
+            PlaySound('Sounds/level_up.mp3', 0.2)
+            time.sleep(3)
+            print("LVL: {}".format(self.level))
+            print("HP: +5")
+            print("MP: +5")
+            print("ATK: +2")
+            print("DEF: +2")
+            print("AGL: +2")
+            print("MAG: +2")
+            time.sleep(2.0)
 
         CheckLevelRewards(self)
         print("{}{}{} has gained {}{}{} skill points!".format(self.colour, self.name, RESET, DAMAGE_COLOUR, "5", RESET))
@@ -115,9 +183,10 @@ QUIT[Q]\n""")
             Combat(self)
         if choice == "x" or choice == "X":
             self.show_inventory()
-            self.show_inventory()
         if choice == "c" or choice == "C":
             self.show_team()
+        if choice == "Q" or choice == "q":
+            quit()
 
     def action(self, enemies, defeated_mobs):
         flee_failed = False
@@ -141,10 +210,11 @@ QUIT[Q]\n""")
 
         elif action == "x" or action == "X":
             self.ability(enemies, defeated_mobs)
-            pass
+            return
 
         elif action == "c" or action == "C":
             self.spell(enemies, defeated_mobs)
+            return
 
         elif action == "v" or action == "V":
             if not flee_failed:
@@ -236,7 +306,7 @@ QUIT[Q]\n""")
             # -1 so choice_spell can be used as an index.
         choice_ability -= 1
 
-        ability_type = a_getType(self.abilities[choice_ability])
+        ability_type = a_getTargetType(self.abilities[choice_ability])
         print("TYPE: ", ability_type)
 
         # If ability is offensive (targets enemies):
@@ -252,6 +322,7 @@ QUIT[Q]\n""")
             else:
                 print("Illegal Input. Try again.")
                 self.ability(enemies, defeated_mobs)
+                return
             if choice > len(enemies) or choice <= 0:
                 print("ENEMY DOES NOT EXIST")
                 time.sleep(1.5)
@@ -277,13 +348,12 @@ QUIT[Q]\n""")
         if a_getCost(self.abilities[choice_ability]) > self.mana:
             print("Not enough mana.")
             self.ability(enemies, defeated_mobs)
-            return
+
+
         Ability(self.abilities[choice_ability], self, target)
         if ability_type is True:
             if target.health <= 0:
                 self.kill_enemy(target, enemies, defeated_mobs)
-
-
 
     def spell(self, enemies, defeated_mobs):
         print("[SPELLS]")
@@ -297,70 +367,89 @@ QUIT[Q]\n""")
         for spell in self.spells:
             print("{}[{}]: {}: {}".format(SPELL_COLOUR, i + 1, spell, s_getCost(spell)) + RESET)
             i += 1
-        print("")
         choice_spell = input("Cast a spell ([B] to back).")
+
         if choice_spell.isdigit():
             choice_spell = int(choice_spell)
+            choice_spell -= 1
+            if s_getCost(self.spells[choice_spell]) > self.mana:
+                print("Not enough mana.")
+                self.spell(enemies, defeated_mobs)
+                return
         else:
             print("Illegal Input. Try again.")
-            self.spell(enemies, defeated_mobs)
+            self.action(enemies, defeated_mobs)
             return
-        if choice_spell > len(self.spells) or choice_spell <= 0:
+
+        if choice_spell > len(self.spells) or choice_spell < 0:
             print("SPELL DOES NOT EXIST")
             time.sleep(1.5)
             self.spell(enemies, defeated_mobs)
             return
         # -1 so choice_spell can be used as an index.
-        choice_spell -= 1
 
-        spell_type = s_getType(self.spells[choice_spell])
-        print("TYPE: ", spell_type)
-        type = s_getType(spell)
+        spell_type = s_getTargetType(self.spells[choice_spell])  # Offensive or defensive
+        multi_target = s_getMultiTarget(self.spells[choice_spell])  # Does it hit one target or multiple.
 
         # If spell is offensive:
         if spell_type:
-            for e in range(len(enemies)):
-                print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name,
-                                                               enemies[e].health, enemies[e].max_health,
-                                                               enemies[e].mana, enemies[e].max_mana) + RESET)
-
-            choice = input()
-            if choice.isdigit():
-                choice = int(choice)
+            if multi_target:
+                target = enemies
             else:
-                print("Illegal Input. Try again.")
-                self.spell(enemies, defeated_mobs)
-            if choice > len(enemies) or choice <= 0:
-                print("ENEMY DOES NOT EXIST")
-                time.sleep(1.5)
-                self.spell(enemies, defeated_mobs)
-                return
-            choice -= 1
-            target = enemies[choice]
+                for e in range(len(enemies)):
+                    print("{}[{}]: {}: HP[{}/{}] MP[{}/{}]".format(enemies[e].colour, e + 1, enemies[e].name,
+                                                                   enemies[e].health, enemies[e].max_health,
+                                                                   enemies[e].mana, enemies[e].max_mana) + RESET)
+
+                choice = input()
+                if choice.isdigit():
+                    choice = int(choice)
+                else:
+                    print("Illegal Input. Try again.")
+                    self.spell(enemies, defeated_mobs)
+                if choice > len(enemies) or choice <= 0:
+                    print("ENEMY DOES NOT EXIST")
+                    time.sleep(1.5)
+                    self.spell(enemies, defeated_mobs)
+                    return
+                choice -= 1
+                target = enemies[choice]
 
 
         # If spell is friendly:
         elif not spell_type:
-            i = 0
-            for p in party:
-                print(
-                    self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health, p.mana,
-                                                                          p.max_mana))
-                i += 1
+            if multi_target:
+                target = party
+            else:
+                i = 0
+                for p in party:
+                    print(
+                        self.colour + "[{}]: {}: HP:[{}/{}] MP[{}/{}]".format(i + 1, p.name, p.health, p.max_health,
+                                                                              p.mana,
+                                                                              p.max_mana))
+                    i += 1
 
-            choice = input("Cast a spell ([B] to back).")
-            if choice.isdigit():
-                choice = int(choice)
-            choice -= 1
-            target = party[choice]
-        if s_getCost(self.spells[choice_spell]) > self.mana:
-            print("Not enough mana.")
-            self.spell(enemies, defeated_mobs)
-            return
+                choice = input("Cast a spell ([B] to back).")
+                if choice.isdigit():
+                    choice = int(choice)
+                choice -= 1
+                target = party[choice]
+
         Spell(self.spells[choice_spell], self, target)
-        if target.health < 1 and spell_type:
-            self.kill_enemy(target, enemies, defeated_mobs)
 
+        if multi_target:
+            dead_enemies = []
+            for t in target:
+                if t.health < 1 and spell_type:
+                    dead_enemies.append(t)
+
+            for d in dead_enemies:
+                self.kill_enemy(d, enemies, defeated_mobs)
+
+
+        else:
+            if target.health < 1 and spell_type:
+                self.kill_enemy(target, enemies, defeated_mobs)
 
     def kill_enemy(self, target, enemies, defeated_mobs):
         print("'{}{}{}' died.".format(target.colour, target.name, RESET))
@@ -407,6 +496,7 @@ QUIT[Q]\n""")
         for item in self.inventory:
             print("     {}".format(item))
         print("---------")
+        return
 
     def show_team(self):
         for p in party:
@@ -447,6 +537,7 @@ class Ally(Player):
             self.abilities = ['Rend']
             self.equipment = []
             self.initiative = 0
+            self.skills = {'Axes': 0, 'Hammers': 0, 'Fisticuffs': 0}
 
         if name == "Katie":
             self.max_health = 22
@@ -456,14 +547,15 @@ class Ally(Player):
             self.exp = 0
             self.atk = 11
             self.defense = 11
-            self.agl = 25
+            self.agl = 20
             self.mag = 16
             self.level = 1
             self.level_threshold = 30
-            self.spells = ['Fireball', 'Heal']
+            self.spells = ['Fireball', 'Heal', 'Sizz']
             self.abilities = []
             self.equipment = []
             self.initiative = 0
+            self.skills = {'Whips': 0, 'Staves': 0, 'Allure': 0}
 
         if name == "Yorkshire":
             self.max_health = 30
@@ -473,13 +565,15 @@ class Ally(Player):
             self.exp = 0
             self.atk = 13
             self.defense = 13
-            self.agl = 13
+            self.agl = 50   # 13
             self.mag = 5
             self.level = 1
             self.level_threshold = 30
             self.spells = ['Haste']
-            self.abilities = []
+            self.abilities = ['Rend']
             self.equipment = []
+            self.initiative = 0
+            self.skills = {'Swords': 0, 'Bows': 0, 'Charisma': 0}
 
         self.base_atk = self.atk
         self.base_def = self.defense

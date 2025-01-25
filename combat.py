@@ -112,7 +112,6 @@ def Turn(char, hero):
 
             pass
         else:
-
             CheckModifiers(char)
             print("----------------------")
             print(char.colour + "{}: HP:[{}/{}] MP:[{}/{}]".format(char.name.upper(), char.health, char.max_health,
@@ -151,7 +150,6 @@ def Victory(hero):
 
         for d in p.debuffs.copy():
             RemoveModifiers(d, p)
-
 
         if p == hero:
             for e in range(len(defeated_mobs)):

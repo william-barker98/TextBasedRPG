@@ -35,8 +35,8 @@ class Enemies:
             self.max_mana = 0
             self.mana = 0
             self.atk = 14
-            self.defense = 8
-            self.agl = 24
+            self.defense = 7
+            self.agl = 10
             self.gold = 2
             self.exp = 40
             self.lvl = 1
